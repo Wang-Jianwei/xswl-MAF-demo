@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .config import Settings
+from .tooling import build_dev_tools
 
 
 @dataclass(slots=True)
@@ -53,6 +54,13 @@ def create_agents(settings: Settings) -> DevAgents:
     arch_client = _create_client(settings, arch_model)
     dev_client = _create_client(settings, dev_model)
     review_client = _create_client(settings, review_model)
+    dev_tools = None
+    if settings.enable_tools:
+        dev_tools = build_dev_tools(
+            workspace_root=settings.workspace_root,
+            allowed_commands=settings.allowed_commands,
+            command_timeout_seconds=settings.command_timeout_seconds,
+        )
 
     product_manager = pm_client.as_agent(
         name="ProductManagerAgent",
@@ -75,16 +83,18 @@ def create_agents(settings: Settings) -> DevAgents:
         description="Produces implementation plan and key code skeleton",
         instructions=(
             "你是开发工程师。基于需求和设计输出实现步骤、关键函数签名、"
-            "伪代码或骨架代码建议。"
+            "伪代码或骨架代码建议。可在必要时调用工具读写工作区文件并执行白名单命令验证。"
         ),
+        tools=dev_tools,
     )
     reviewer = review_client.as_agent(
         name="ReviewerAgent",
         description="Reviews output quality, risks, and test strategy",
         instructions=(
             "你是代码评审。检查需求覆盖、实现可行性、风险点、测试建议。"
-            "给出可执行改进项。"
+            "给出可执行改进项。可在必要时调用工具执行测试命令验证结论。"
         ),
+        tools=dev_tools,
     )
 
     return DevAgents(

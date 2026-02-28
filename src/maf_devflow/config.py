@@ -18,6 +18,10 @@ class Settings:
     model_architect: str | None
     model_developer: str | None
     model_reviewer: str | None
+    enable_tools: bool
+    workspace_root: str
+    allowed_commands: str
+    command_timeout_seconds: int
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -38,6 +42,10 @@ class Settings:
             model_architect=os.getenv("MAF_MODEL_ARCHITECT"),
             model_developer=os.getenv("MAF_MODEL_DEVELOPER"),
             model_reviewer=os.getenv("MAF_MODEL_REVIEWER"),
+            enable_tools=os.getenv("MAF_ENABLE_TOOLS", "false").strip().lower() in {"1", "true", "yes", "on"},
+            workspace_root=os.getenv("MAF_WORKSPACE_ROOT", os.getcwd()),
+            allowed_commands=os.getenv("MAF_ALLOWED_COMMANDS", "python,pytest,pip"),
+            command_timeout_seconds=int(os.getenv("MAF_COMMAND_TIMEOUT_SECONDS", "120")),
         )
 
     def get_model_id(self, agent_role: str) -> str:
@@ -83,3 +91,9 @@ class Settings:
         if self.provider == "ollama":
             if not self.ollama_endpoint:
                 raise ValueError("OLLAMA_ENDPOINT is required when MAF_PROVIDER=ollama")
+
+        if self.enable_tools:
+            if not self.workspace_root.strip():
+                raise ValueError("MAF_WORKSPACE_ROOT is required when MAF_ENABLE_TOOLS=true")
+            if self.command_timeout_seconds <= 0:
+                raise ValueError("MAF_COMMAND_TIMEOUT_SECONDS must be > 0")

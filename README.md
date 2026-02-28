@@ -8,6 +8,7 @@
 - 两种流程模式：`sequential`（串行）与 `concurrent`（并发）
 - 命令行工具：输入一个需求，输出完整的开发流程产物
 - `--dry-run` 离线模式：不依赖模型和 API，用于本地冒烟验证
+- 可选工具执行层：支持受控文件读写与白名单命令执行（默认关闭）
 
 ## 环境要求
 
@@ -142,6 +143,23 @@ maf-devflow "实现一个支持多 agent 协作的软件研发流程工具" --mo
 # 离线冒烟运行
 maf-devflow "实现一个支持多 agent 协作的软件研发流程工具" --dry-run
 ```
+
+## 可选：启用工具调用（文件/命令）
+
+默认情况下，Agent 只进行文本推理。若要让 Developer/Reviewer 自动读写文件或执行命令，可在 `.env` 开启：
+
+```bash
+MAF_ENABLE_TOOLS=true
+MAF_WORKSPACE_ROOT=.
+MAF_ALLOWED_COMMANDS=python,pytest,pip
+MAF_COMMAND_TIMEOUT_SECONDS=120
+```
+
+说明：
+
+- 仅允许访问 `MAF_WORKSPACE_ROOT` 下的文件路径（防止越界访问）
+- 仅允许执行白名单命令（防止任意命令执行）
+- 超时可控，避免任务长时间阻塞
 
 ## 测试
 

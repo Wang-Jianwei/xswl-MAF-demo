@@ -99,6 +99,27 @@ python examples/quick_vllm.py
 
 如果只想快速验证，这个脚本直接硬编码了你的 vLLM 配置。
 
+## 工具调用示例（读写文件 + 执行命令）
+
+```bash
+python examples/tools_enabled_example.py
+```
+
+此示例会要求 Agent 在流程中尝试调用工具，完成：
+
+- 写入 `generated/todo_core.py`
+- 写入 `tests/test_generated_todo_core.py`
+- 执行 `pytest -q tests/test_generated_todo_core.py`
+
+运行前请在 `.env` 中开启：
+
+```bash
+MAF_ENABLE_TOOLS=true
+MAF_WORKSPACE_ROOT=.
+MAF_ALLOWED_COMMANDS=python,pytest,pip
+MAF_COMMAND_TIMEOUT_SECONDS=120
+```
+
 ## 核心 API
 
 ```python
