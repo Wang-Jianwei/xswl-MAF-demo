@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "maf-devflow"
+version = "0.1.0"
+description = "A multi-agent software development workflow tool built with Microsoft Agent Framework"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "agent-framework>=1.0.0b0",
+  "python-dotenv>=1.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.0",
+]
+
+[project.scripts]
+maf-devflow = "maf_devflow.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,36 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Install dependencies",
+            "type": "shell",
+            "command": "python -m pip install -e .",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run tests",
+            "type": "shell",
+            "command": "pytest -q",
+            "group": "test",
+            "problemMatcher": [
+                "$pytest"
+            ]
+        },
+        {
+            "label": "Run CLI (dry-run)",
+            "type": "shell",
+            "command": "maf-devflow \"<需求描述>\" --dry-run",
+            "problemMatcher": []
+        },
+        {
+            "label": "Run CLI",
+            "type": "shell",
+            "command": "maf-devflow \"<需求描述>\"",
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,5 @@
+agent-framework>=1.0.0b0
+python-dotenv>=1.0.1
+
+[dev]
+pytest>=8.3.0

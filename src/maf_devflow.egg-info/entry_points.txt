@@ -1,0 +1,2 @@
+[console_scripts]
+maf-devflow = maf_devflow.cli:main

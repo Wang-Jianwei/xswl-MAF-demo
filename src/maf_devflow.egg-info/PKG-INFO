@@ -1,0 +1,84 @@
+Metadata-Version: 2.4
+Name: maf-devflow
+Version: 0.1.0
+Summary: A multi-agent software development workflow tool built with Microsoft Agent Framework
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: agent-framework>=1.0.0b0
+Requires-Dist: python-dotenv>=1.0.1
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3.0; extra == "dev"
+
+# maf-devflow
+
+基于 Microsoft Agent Framework 的 Python 多 Agent 协作开发流程工具。
+
+## 功能
+
+- 多角色协作：产品经理、架构师、开发工程师、评审工程师
+- 两种流程模式：`sequential`（串行）与 `concurrent`（并发）
+- 命令行工具：输入一个需求，输出完整的开发流程产物
+- `--dry-run` 离线模式：不依赖模型和 API，用于本地冒烟验证
+
+## 环境要求
+
+- Python 3.10+
+- Windows / macOS / Linux
+
+## 安装
+
+```bash
+python -m venv .venv
+# Windows PowerShell
+.\.venv\Scripts\Activate.ps1
+
+pip install --upgrade pip
+pip install -e .
+```
+
+## 配置
+
+```bash
+# 复制模板后填写
+cp .env.example .env
+```
+
+### OpenAI 模式
+
+- `MAF_PROVIDER=openai`
+- `OPENAI_API_KEY=...`
+- `MAF_MODEL_ID=gpt-4.1-mini`（可改）
+
+### Azure 模式
+
+- `MAF_PROVIDER=azure`
+- `AZURE_AI_PROJECT_ENDPOINT=...`
+- `AZURE_AI_MODEL_DEPLOYMENT_NAME=...`
+- 本地先执行 `az login`
+
+## 运行
+
+```bash
+# 串行流程
+maf-devflow "实现一个支持多 agent 协作的软件研发流程工具"
+
+# 并发流程
+maf-devflow "实现一个支持多 agent 协作的软件研发流程工具" --mode concurrent
+
+# 离线冒烟运行
+maf-devflow "实现一个支持多 agent 协作的软件研发流程工具" --dry-run
+```
+
+## 测试
+
+```bash
+pytest -q
+```
+
+## 目录结构
+
+- `src/maf_devflow/config.py`：环境配置与校验
+- `src/maf_devflow/agents.py`：MAF 客户端与角色 Agent 构建
+- `src/maf_devflow/workflow.py`：多 Agent 协作流程编排
+- `src/maf_devflow/cli.py`：CLI 入口
+- `tests/test_workflow.py`：流程单测
